@@ -42,23 +42,23 @@
 	<script src="http://d3js.org/d3.v3.min.js"></script>
 	<script>
 	var margin = {top: 10, right: 30, bottom: 30, left: 50},
-		    width = 1350 - margin.left - margin.right,
+		    width = 1800 - margin.left - margin.right,
 		    height = 500 - margin.top - margin.bottom;
 	// Parse the date / time
-	var parseDate = d3.time.format("%b %d, %Y %I:%M").parse;
-	var x = d3.scale.ordinal().rangeRoundBands([0, width], .05);
+	var parseDate = d3.time.format("%b %d, %Y %I:%M:%S").parse;
+	var x = d3.scale.ordinal().rangeRoundBands([0, width], .00000000000);
 
 	var y = d3.scale.linear().range([height, 0]);
 
 	var xAxis = d3.svg.axis()
 	    .scale(x)
 	    .orient("bottom")
-	    .tickFormat(d3.time.format("%b %d, %I:%M"));
+	    .tickFormat(d3.time.format("%b %d, %I:%M:%S"));
 
 	var yAxis = d3.svg.axis()
 	    .scale(y)
 	    .orient("left")
-	    .ticks(10);
+	    .ticks(50);
 	
 	var svg = d3.select("body").append("svg")
 			.attr("width", width + margin.left + margin.right)
@@ -66,15 +66,23 @@
 		.append("g")
 			.attr("transform", 
 			"translate(" + margin.left + "," + margin.top + ")");
-	d3.json("https://rawgit.com/richiedjohnson/packet-analyser/master/count_per_min.json", function(error, data) {
+	d3.json("https://rawgit.com/richiedjohnson/packet-analyser/master/count_per_sec.json", function(error, data) {
 
 	    data.forEach(function(d) {
+		//console.log(d);
 		d.time = parseDate(d.time);
 		d.count = +d.count;
 	    });
+
+	//data = data.filter(function(d){return d.time != undefined});
 	
-	  x.domain(data.map(function(d) { return d.time; }));
-	  y.domain([0, d3.max(data, function(d) { return d.count; })]);
+	min_val = d3.min(data,function(d) { return d.time; });
+	max_val = d3.max(data,function(d) { return d.time; });
+	console.log(data.length);
+	
+	x.domain(data.map(function(d) { return d.time; }));
+	//x.domain([min_val, max_val]);	  
+	y.domain([0, d3.max(data, function(d) { return d.count; })]);
 
 	  svg.append("g")
 	      .attr("class", "x axis")

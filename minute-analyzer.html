@@ -42,7 +42,7 @@
 	<script src="http://d3js.org/d3.v3.min.js"></script>
 	<script>
 	var margin = {top: 10, right: 30, bottom: 30, left: 50},
-		    width = 1350 - margin.left - margin.right,
+		    width = 1800 - margin.left - margin.right,
 		    height = 500 - margin.top - margin.bottom;
 	// Parse the date / time
 	var parseDate = d3.time.format("%b %d, %Y %I:%M").parse;
@@ -69,6 +69,7 @@
 	d3.json("https://rawgit.com/richiedjohnson/packet-analyser/master/count_per_min.json", function(error, data) {
 
 	    data.forEach(function(d) {
+		console.log(d);
 		d.time = parseDate(d.time);
 		d.count = +d.count;
 	    });
